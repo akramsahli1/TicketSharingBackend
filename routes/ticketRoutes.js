@@ -11,7 +11,14 @@ router
   .route("/:ticketId")
   .get(ticketController.getTicket)
   .delete(ticketController.deleteTicket)
+  .patch(ticketController.updateTicket);
 
+router
+  .route("/getTicketsClient/:client")
+  .get(ticketController.getTicketsClient)
 
+router
+  .route("/getTicketsIntervenant/:intervenant")
+  .get(ticketController.getTicketsIntervenant)
 
 module.exports = router;

@@ -45,6 +45,21 @@ const getAllTickets = async (req, res) => {
     }
   };
   
+  const updateTicket =async(req, res) => {
+    try{
+      const ticket = await Ticket.findByIdAndUpdate(req.params.ticketId, req.body, {
+        new: true,
+        runValidators: true
+      });
+      res.status(200).json({
+      success: "PATCH ticket route has been executed",
+      data : ticket
+      }); 
+    } catch(err){      
+      err => console.log(err);
+    }
+  };
+
   const deleteTicket = async (req, res) => {
     try{
       const ticket = await Ticket.findByIdAndDelete(req.params.ticketId);
@@ -57,10 +72,42 @@ const getAllTickets = async (req, res) => {
       err => console.log(err);
     }
   };
+  const getTicketsClient = async (req, res) => {
+    try{
+      const tickets = await Ticket.find({client:req.params.client});
+      res.status(200).json({
+        success: "True",
+        data: tickets
+      }); 
+    } catch(err){
+        res.status(404).json({
+          success: "false",
+          msg:err
+        })
+    }
+  };
   
+  const getTicketsIntervenant = async (req, res) => {
+    try{
+      const tickets = await Ticket.find({intervenant:req.params.intervenant});
+      res.status(200).json({
+        success: "True",
+        data: tickets
+      }); 
+    } catch(err){
+        res.status(404).json({
+          success: "false",
+          msg:err
+        })
+    }
+  };
+
   module.exports = {
     getAllTickets,
     createTicket,
     getTicket,
+    updateTicket,
     deleteTicket,
+    getTicketsClient,
+    getTicketsIntervenant,
   };

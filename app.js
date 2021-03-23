@@ -4,9 +4,10 @@ const express = require("express");
 const app = express();
 const morgan = require("morgan");
 const ticketRouter = require("./routes/ticketRoutes");
-
+const cors = require('cors')
 app.use(express.static(`${__dirname}/public`));
 app.use(express.json());
+app.use(cors());
 
 app.use("/api/v1/ticket",ticketRouter);
 

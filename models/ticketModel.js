@@ -18,7 +18,7 @@ const ticketSchema = mongoose.Schema({
     nature : {
         type: String,
     },
-    priorité : {
+    priorite : {
         type: String,
         default:"Normal"
     },
@@ -27,6 +27,18 @@ const ticketSchema = mongoose.Schema({
     },
     details : {
         type: String,
+    },
+    intervenant : {
+        type: String,
+        default:""
+    },
+    periode : {
+        type : Number,
+        default : 1
+    },
+    status : {
+        type : String,
+        default:"En attente"
     },
 
 });
