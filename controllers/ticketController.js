@@ -75,6 +75,7 @@ const getAllTickets = async (req, res) => {
   const getTicketsClient = async (req, res) => {
     try{
       const tickets = await Ticket.find({client:req.params.client});
+      console.log(req.params.client);
       res.status(200).json({
         success: "True",
         data: tickets
