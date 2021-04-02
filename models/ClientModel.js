@@ -15,6 +15,10 @@ const clientSchema = mongoose.Schema({
     type: String,
     required: true
   },
+  Fax: {
+    type: String,
+    required: true
+  },
   email: {
     type: String,
     unique: true,
