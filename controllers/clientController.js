@@ -45,9 +45,37 @@ const getClient = async (req, res) => {
   }
 };
 
+const updateClient =async(req, res) => {
+  try{
+    const client = await Client.findByIdAndUpdate(req.params.clientId, req.body, {
+      new: true,
+      runValidators: true
+    });
+    res.status(200).json({
+    success: "PATCH Client route has been executed",
+    data : client
+    });
+  } catch(err){      
+    err => console.log(err);
+  }
+};
 
+const deleteClient = async (req, res) => {
+  try{
+    const client = await Client.findByIdAndDelete(req.params.clientId);
+    console.log(client,"Deleted");
+    res.status(200).json({
+    success: "True",
+    data : client
+    }); 
+  } catch(err){
+    err => console.log(err);
+  }
+};
 module.exports = {
   getAllClients,
   createClient,
   getClient,
+  updateClient,
+  deleteClient,
 };

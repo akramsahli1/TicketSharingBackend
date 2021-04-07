@@ -45,9 +45,54 @@ const getMembSociete = async (req, res) => {
   }
 };
 
+const getMembSocieteRole = async (req, res) => {
+  try{
+    const membSocietes = await MembSociete.find({role:req.params.role});
+    res.status(200).json({
+      success: "True",
+      data: membSocietes
+    }); 
+  } catch(err){
+      res.status(404).json({
+        success: "false",
+        msg:err
+      })
+  }
+};
+
+const updateMembSociete =async(req, res) => {
+  try{
+    const membSociete = await MembSociete.findByIdAndUpdate(req.params.membSocieteId, req.body, {
+      new: true,
+      runValidators: true
+    });
+    res.status(200).json({
+    success: "PATCH MembSociete route has been executed",
+    data : membSociete
+    });
+  } catch(err){      
+    err => console.log(err);
+  }
+};
+
+const deleteMembSociete = async (req, res) => {
+  try{
+    const membSociete = await MembSociete.findByIdAndDelete(req.params.membSocieteId);
+    console.log(membSociete,"Deleted");
+    res.status(200).json({
+    success: "True",
+    data : membSociete
+    }); 
+  } catch(err){
+    err => console.log(err);
+  }
+};
 
 module.exports = {
   getAllMembSocietes,
   createMembSociete,
   getMembSociete,
+  getMembSocieteRole,
+  updateMembSociete,
+  deleteMembSociete
 };

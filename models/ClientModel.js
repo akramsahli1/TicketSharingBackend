@@ -15,7 +15,7 @@ const clientSchema = mongoose.Schema({
     type: String,
     required: true
   },
-  Fax: {
+  fax: {
     type: String,
     required: true
   },

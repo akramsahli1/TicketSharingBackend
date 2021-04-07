@@ -9,5 +9,11 @@ router
 router
   .route("/:membSocieteId")
   .get(membSocieteController.getMembSociete)
+  .delete(membSocieteController.deleteMembSociete)
+  .patch(membSocieteController.updateMembSociete);
+
+router
+  .route("/getMembSocietesRole/:role")
+  .get(membSocieteController.getMembSocieteRole);
 
 module.exports = router;
