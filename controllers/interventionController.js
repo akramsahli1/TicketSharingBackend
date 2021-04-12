@@ -1,20 +1,30 @@
 const Intervention = require("../models/interventionModel");
 
 const getAllInterventions = async (req, res) => {
-    try{
-      const interventions = await Intervention.find();
-      res.status(200).json({
-      success: "True",
-      data : interventions
-      }); 
-    } catch(err){
-          res.status(404).json({
-            success: "false",
-          msg:err
-          
-        })
-    }
-  };
+  try{
+  let findArgs = {};
+  
+  for (let key in req.body.filters) {
+
+      if (req.body.filters[key].length > 0) {
+              findArgs[key] = req.body.filters[key];
+      }
+  }
+    
+    console.log(findArgs)
+    const interventions = await Intervention.find(findArgs);
+    res.status(200).json({
+    success: "True",
+    data : interventions
+    }); 
+  } catch(err){
+        res.status(404).json({
+          success: "false",
+        msg:err
+        
+      })
+  }
+};
   
   const createIntervention = async (req, res) => {
     const newIntervention = new Intervention(req.body);
@@ -103,6 +113,21 @@ const getAllInterventions = async (req, res) => {
     }
   };
 
+  const getInterventionsContrat = async (req, res) => {
+    try{
+      const interventions = await Intervention.find({contrat:req.params.contrat});
+      res.status(200).json({
+        success: "True",
+        data: interventions
+      }); 
+    } catch(err){
+        res.status(404).json({
+          success: "false",
+          msg:err
+        })
+    }
+  };
+
   module.exports = {
     getAllInterventions,
     createIntervention,
@@ -111,4 +136,5 @@ const getAllInterventions = async (req, res) => {
     deleteIntervention,
     getInterventionsClient,
     getInterventionsIntervenant,
+    getInterventionsContrat
   };

@@ -2,10 +2,14 @@ const express = require("express");
 const interventionController = require("../controllers/interventionController");
 const router = express.Router();
 
+
 router
   .route("/")
   .post(interventionController.createIntervention)
-  .get(interventionController.getAllInterventions)
+
+router  
+  .route("/getAll")
+  .post(interventionController.getAllInterventions)  
 
 router
   .route("/:interventionId")
@@ -21,4 +25,8 @@ router
   .route("/getInterventionsIntervenant/:IDintervenant")
   .get(interventionController.getInterventionsIntervenant)
 
+  router
+  .route("/getInterventionsContrat/:contrat")
+  .get(interventionController.getInterventionsContrat)  
 module.exports = router;
+ 
