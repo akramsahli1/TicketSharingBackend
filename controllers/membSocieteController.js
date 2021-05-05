@@ -1,5 +1,5 @@
 const MembSociete = require("../models/membSocieteModel");
-
+const bcrypt = require("bcrypt");
 const getAllMembSocietes = async (req, res) => {
   try{
     const membSocietes = await MembSociete.find();
@@ -67,6 +67,26 @@ const updateMembSociete =async(req, res) => {
       runValidators: true
     });
     res.status(200).json({
+    success: "PATCH Client route has been executed",
+    data : membSociete
+    });
+  } catch(err){      
+    err => console.log(err);
+  }
+};
+
+const updateMotDePasseMembSociete =async(req, res) => {
+  const updateMembSociete = req.body;
+  try{
+    console.log(updateMembSociete);
+    const salt = await bcrypt.genSalt();
+    updateMembSociete.motDePasse = await bcrypt.hash(updateMembSociete.motDePasse, salt);
+    console.log(updateMembSociete.motDePasse);
+    const membSociete = await MembSociete.findByIdAndUpdate(req.params.membSocieteId, updateMembSociete, {
+      new: true,
+      runValidators: true
+    });
+    res.status(200).json({
     success: "PATCH MembSociete route has been executed",
     data : membSociete
     });
@@ -94,5 +114,6 @@ module.exports = {
   getMembSociete,
   getMembSocieteRole,
   updateMembSociete,
-  deleteMembSociete
+  deleteMembSociete,
+  updateMotDePasseMembSociete
 };

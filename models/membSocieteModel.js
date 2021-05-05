@@ -27,7 +27,7 @@ const membSocieteSchema = mongoose.Schema({
   },
   role: {
     type: String,
-    enum : ["Ad","Rc","Rt","In"],
+    enum : ["Ad","Rc","Ri","In"],
     default:"In"
   }
 });

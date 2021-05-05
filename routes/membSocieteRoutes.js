@@ -13,6 +13,9 @@ router
   .patch(membSocieteController.updateMembSociete);
 
 router
+  .route("/updateMotDePasse/:membSocieteId")
+  .patch(membSocieteController.updateMotDePasseMembSociete);
+router
   .route("/getMembSocietesRole/:role")
   .get(membSocieteController.getMembSocieteRole);
 

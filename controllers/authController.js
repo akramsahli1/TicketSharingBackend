@@ -1,5 +1,5 @@
 const MembSociete = require("../models/membSocieteModel");
-const Client = require("../models/ClientModel");
+const Client = require("../models/clientModel");
 const jwt = require("jsonwebtoken");
 require("dotenv").config();
 // Handle errors

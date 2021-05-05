@@ -12,4 +12,8 @@ router
   .delete(clientController.deleteClient)
   .patch(clientController.updateClient);
   
+router
+  .route("/updateMotDePasse/:clientId")
+  .patch(clientController.updateMotDePasseClient)
+
 module.exports = router;

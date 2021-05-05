@@ -1,5 +1,5 @@
-const Client = require("../models/ClientModel");
-
+const Client = require("../models/clientModel");
+const bcrypt = require("bcrypt");
 const getAllClients = async (req, res) => {
   try{
     const clients = await Client.find();
@@ -60,6 +60,24 @@ const updateClient =async(req, res) => {
   }
 };
 
+const updateMotDePasseClient =async(req, res) => {
+  const updateClient = req.body;
+  try{
+    const salt = await bcrypt.genSalt();
+    updateClient.motDePasse = await bcrypt.hash(updateClient.motDePasse, salt);
+    const client = await Client.findByIdAndUpdate(req.params.clientId, updateClient, {
+      new: true,
+      runValidators: true
+    });
+    res.status(200).json({
+    success: "PATCH client route has been executed",
+    data : client
+    });
+  } catch(err){      
+    err => console.log(err);
+  }
+};
+
 const deleteClient = async (req, res) => {
   try{
     const client = await Client.findByIdAndDelete(req.params.clientId);
@@ -78,4 +96,5 @@ module.exports = {
   getClient,
   updateClient,
   deleteClient,
+  updateMotDePasseClient
 };
