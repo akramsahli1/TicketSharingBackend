@@ -1,6 +1,7 @@
 const MembSociete = require("../models/membSocieteModel");
 const Client = require("../models/clientModel");
 const jwt = require("jsonwebtoken");
+
 require("dotenv").config();
 // Handle errors
 const handleErrors = (err) => {
@@ -9,12 +10,12 @@ const handleErrors = (err) => {
 
   // incorrect login
   if (err.message === "Login incorrect") {
-    errors.login = "that login is not registered";
+    errors.login = "Ce login est pas incorrecte ";
   }
 
   // incorrect password
   if (err.message === "Mot de passe incorrect") {
-    errors.motDePasse = "that password is not correct";
+    errors.motDePasse = "Ce mot de passe est incorrecte";
   }
 
   // Duplicate error code
@@ -34,7 +35,8 @@ const handleErrors = (err) => {
 };
 
 // Token creation
-const maxAge = 3 * 24 * 60 * 60;
+ const maxAge = '36000s';
+//const maxAge =5;
 const createToken = (id) => {
   return jwt.sign({ id }, process.env.SECRET, {
     expiresIn: maxAge,
@@ -48,7 +50,6 @@ module.exports.signup_postMembS = async (req, res) => {
   try {
     const membSociete = await MembSociete.create(newMembSociete);
     const token = createToken(membSociete._id);
-    res.cookie("jwt", token, { httpOnly: true, maxAge: maxAge * 1000 });
     res.status(201).json({ membSociete: membSociete._id , token: token});
 
   } catch (err) {
@@ -63,23 +64,22 @@ module.exports.login_postMembS = async (req, res) => {
 
     const membSociete = await MembSociete.login(login, motDePasse);
     const token = createToken(membSociete._id);
-    res.cookie("jwt", token, { httpOnly: true, maxAge: maxAge * 1000 });
 
     res.status(200).json({ membSociete: membSociete._id, token,"msg":"succes" });
     
   } catch (err) {
     const errors = handleErrors(err);
-    res.status(400).json({ errors });
+    res.status(203).json({ errors });
   }
 };
+
 module.exports.signup_postClient = async (req, res) => {
   const newClient  = req.body;
   console.log(req.body);
   try {
     const client = await Client.create(newClient);
     const token = createToken(client._id);
-    res.cookie("jwt", token, { httpOnly: true, maxAge: maxAge * 1000 });
-    res.status(201).json({ client: client._id , token: token});
+    res.status(200).json({ client: client._id , token: token});
 
   } catch (err) {
     const errors = handleErrors(err);
@@ -93,12 +93,17 @@ module.exports.login_postClient = async (req, res) => {
 
     const client = await Client.login(login, motDePasse);
     const token = createToken(client._id);
-    res.cookie("jwt", token, { httpOnly: true, maxAge: maxAge * 1000 });
-
     res.status(200).json({ client: client._id, token,"msg":"succes" });
     
   } catch (err) {
     const errors = handleErrors(err);
-    res.status(400).json({ errors });
+    res.status(203).json({ errors });
   }
+};
+
+
+module.exports.refleshToken = async (req, res) => {
+  console.log(req.user.id);
+  const token = createToken(req.user.id);
+  res.json({token})
 };

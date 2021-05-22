@@ -1,6 +1,7 @@
 const express = require("express");
 const ticketController = require("../controllers/ticketController");
 const router = express.Router();
+const Filtre=require('../middleware/FiltreTicket');
 
 
 router
@@ -9,7 +10,7 @@ router
 
 router  
   .route("/getAll")
-  .post(ticketController.getAllTickets)  
+  .post(Filtre,ticketController.getAllTickets)  
 
 router
   .route("/:ticketId")

@@ -50,7 +50,7 @@ const getAffectation = async (req, res) => {
   
 const getAffectationsTicket = async (req, res) => {
     try{
-      const affectations = await Affecter.find({IDTicket:req.params.IDTicket,annule:false});
+      const affectations = await Affecter.findOne({IDTicket:req.params.IDTicket,annule:false});
       res.status(200).json({
         success: "True",
         data: affectations
@@ -83,7 +83,7 @@ const getAffectationsIntervenant = async (req, res) => {
 
 const getAffectationsIntervenantTicket = async (req, res) => {
   try{
-    const affectations = await Affecter.find({IDTicket:req.params.IDTicket,IDintervenant:req.params.IDintervenant});
+    const affectations = await Affecter.findOne({IDTicket:req.params.IDTicket,IDintervenant:req.params.IDintervenant});
     res.status(200).json({
       success: "True",
       data: affectations

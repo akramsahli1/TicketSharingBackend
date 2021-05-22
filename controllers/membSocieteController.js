@@ -45,6 +45,18 @@ const getMembSociete = async (req, res) => {
   }
 };
 
+const getMembSocieteConnecte = async (req, res) => {
+  try{
+    const membSociete = await MembSociete.findById(req.user.id, req.body);
+    res.status(200).json({
+    success: "True",
+    data : membSociete
+    }); 
+  } catch(err){
+    err => console.log(err);
+  }
+};
+
 const getMembSocieteRole = async (req, res) => {
   try{
     const membSocietes = await MembSociete.find({role:req.params.role});
@@ -115,5 +127,6 @@ module.exports = {
   getMembSocieteRole,
   updateMembSociete,
   deleteMembSociete,
-  updateMotDePasseMembSociete
+  updateMotDePasseMembSociete,
+  getMembSocieteConnecte
 };

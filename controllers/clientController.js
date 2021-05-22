@@ -32,6 +32,17 @@ const createClient = async (req, res) => {
   } 
 };
 
+const getClientConnecte = async (req, res) => {
+  try{
+    const client = await Client.findById(req.user.id, req.body);
+    res.status(200).json({
+    success: "True",
+    data : client
+    }); 
+  } catch(err){
+    err => console.log(err);
+  }
+};
 
 const getClient = async (req, res) => {
   try{
@@ -96,5 +107,6 @@ module.exports = {
   getClient,
   updateClient,
   deleteClient,
-  updateMotDePasseClient
+  updateMotDePasseClient,
+  getClientConnecte
 };
