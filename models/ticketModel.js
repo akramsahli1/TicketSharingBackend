@@ -1,5 +1,4 @@
 const mongoose = require("mongoose");
-const bcrypt = require("bcrypt");
 
 const ticketSchema = mongoose.Schema({
     
@@ -8,13 +7,14 @@ const ticketSchema = mongoose.Schema({
         ref: "Client"
     },
     dateCreation : {
-        type: String
+        type: Date,
     },
-    heureCreation : {
-        type: String
+    ref:{
+        type:String
     },
     contrat : {
-        type: String
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Contrat"
     },
     nature : {
         type: String,
@@ -29,7 +29,7 @@ const ticketSchema = mongoose.Schema({
     details : {
         type: String,
     },
-    image : {
+    image : { 
         type: Buffer
     },
     etat : {
@@ -38,7 +38,10 @@ const ticketSchema = mongoose.Schema({
     }
 });
 
-
+ticketSchema.index({ 
+    ref: 'text'
+}
+)
 
 
 

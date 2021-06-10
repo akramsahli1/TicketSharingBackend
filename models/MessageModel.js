@@ -2,18 +2,22 @@ const mongoose = require("mongoose");
 
 const messageSchema = mongoose.Schema({
     
-    room : {
-        type: String
+    IDTicket : {
+        type: mongoose.Schema.Types.ObjectId,
+        ref:"Ticket"
     },
     user: {
         type: String
     },
-    text : {
+    contenu : {
         type: String
     },
     date : {
-        type: String
+        type: Date
     },
+    type:{
+        type:String
+    }
     
 });
 

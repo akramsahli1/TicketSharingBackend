@@ -1,12 +1,12 @@
 const mongoose = require("mongoose");
-const bcrypt = require("bcrypt");
 
-const affecterSchema = mongoose.Schema({
+const affecterInSchema = mongoose.Schema({
     
     IDTicket : {
         type: mongoose.Schema.Types.ObjectId,
-        ref: "Ticket"
+        ref: "Interv"
     },
+   
     IDintervenant : {
         type: mongoose.Schema.Types.ObjectId,
         ref: "MembSociete"
@@ -14,18 +14,21 @@ const affecterSchema = mongoose.Schema({
     dateAffectation : {
         type: Date
     },
-    dureeTraitement : {
-        type: Number
-    },
     annule : {
         type: Boolean,
         default : false
     }
+    
 });
 
- 
 
 
 
-const Affecter = mongoose.model("Affecter", affecterSchema);
-module.exports = Affecter;
+
+const AffecterIn = mongoose.model("AffecterIn", affecterInSchema);
+module.exports = AffecterIn;
+
+
+
+
+    

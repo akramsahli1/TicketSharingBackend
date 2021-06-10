@@ -14,6 +14,10 @@ router
   .patch(AffecterController.updateAffectation);
 
 router
+  .route("/getAllAffectationsTicket/:IDTicket")
+  .get(AffecterController.getAllAffectationsTicket);  
+
+router
   .route("/getAffectationsTicket/:IDTicket")
   .get(AffecterController.getAffectationsTicket);
 

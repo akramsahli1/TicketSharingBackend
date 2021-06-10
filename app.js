@@ -14,10 +14,12 @@ const mailingRouter = require("./routes/mailingRoutes");
 const contratRouter = require("./routes/contratRoutes");
 const rapportInterRouter = require("./routes/rapportInterRoutes");
 const affecterRouter = require("./routes/affecterRoutes");
+const statistiqueRoutes = require("./routes/statistiqueRoutes");
 const socketio = require('socket.io');
 const http = require('http');
-const Comment = require("./models/CommentModel");
-const Message = require("./models/MessageModel");
+const commentController = require("./controllers/commentController");
+const messageController = require("./controllers/messageController");
+
 
 
 // Middlewares
@@ -40,6 +42,7 @@ app.use("/api/v1/mailing",mailingRouter);
 app.use("/api/v1/contrat",contratRouter);
 app.use("/api/v1/rapportInter",rapportInterRouter);
 app.use("/api/v1/affectation",affecterRouter);
+app.use("/api/v1/statistisque",statistiqueRoutes);
 
 app.use("/", (req, res, next) => {
   console.log("Introuvable !");
@@ -56,85 +59,88 @@ const PORT = process.env.PORT || 8000;
 
 const usersComment = [];
 const usersMessage = [];
+const messageVu =[]
 
 const io = socketio(server,{cors:{origin:"*"}});
 io.on('connect', (socket) => {
-  socket.on('joinComment', ({ name, room,role }) => {
-    socket.join(room);
+  socket.on('joinComment', ({ name, IDTicket,role }) => {
+    console.log( IDTicket)
+    socket.join(IDTicket);
     if(role!=="Ad"){
-    const newComment = new Comment({ room, user:'chatAdmin', text: `${name} à rejoindre ` ,date:new Date().toUTCString()});
-    usersComment.findIndex((user)=>user.room === room && user.name === name)===-1&&newComment.save()
-    Comment.find({room}).then(data=>io.to(room).emit('oldComments', data))
-    usersComment.push({name,room})
-    }else
-    {
-      Comment.find({room}).then(data=>io.to(room).emit('oldComments', data))
+      
+    const newComment = { IDTicket, user:'chatAdmin', text: `${name} à rejoindre ` ,date:new Date()};
+    usersComment.findIndex((user)=>user.IDTicket === IDTicket && user.name === name)===-1&&commentController.createComment(newComment)
+    usersComment.push({name,IDTicket})
     }
+    commentController.getCommentsTicket(io,IDTicket)
     console.log("commentuser:")
    console.log(usersComment)
   });
 
   socket.on('sendComment', (objet, callback) => {
-    const obj ={room:objet.room, user:objet.name, text: objet.comment ,date:new Date().toUTCString()}
-    const newComment = new Comment(obj);
-    newComment.save().then(()=>{
-    io.to(objet.room).emit('comment', obj);
+    const newComment ={IDTicket:objet.IDTicket, user:objet.name, text: objet.comment ,date:new Date()}
+    commentController.createComment(newComment,io)
     callback()
-  }) 
   });
 
   socket.on('disconnectComment', (objet) => {  
-      const obj ={
-                  room:objet.room,
+      const newComment ={
+                  IDTicket:objet.IDTicket,
                   user: 'chatAdmin' ,
                   text: `${objet.name} à sortir `,
-                  date:new Date().toUTCString(),
+                  date:new Date(),
                 }
-      usersComment.splice(usersComment.findIndex((user)=>user.room === obj.room && user.name === objet.name), 1)  
-     if(usersComment.findIndex((user)=>user.room === obj.room && user.name === objet.name)===-1 ){  
-        const newComment = new Comment(obj);
-        newComment.save()
-        io.to(obj.room).emit('comment', obj)
+      usersComment.splice(usersComment.findIndex((user)=>user.IDTicket === obj.IDTicket && user.name === objet.name), 1)  
+     if(usersComment.findIndex((user)=>user.IDTicket === obj.IDTicket && user.name === objet.name)===-1 ){  
+      commentController.createComment(newComment,io)     
     }
   });
 
 
 
-  socket.on('joinChat', ({ name, room,role }) => {
-    socket.join(room);
-    if(role!=="Ad"){
-        
-        usersMessage.push({name,room})
-        io.to(room).emit('usermessage',usersMessage);
+  socket.on('joinChat', ({ name, IDTicket,role }) => {
+    socket.join(IDTicket);
+    if(role!=="In"){
+      messageVu.findIndex((ob)=>ob.IDTicket==IDTicket)!==-1&&messageVu.splice(messageVu.findIndex((ob)=>ob.IDTicket==IDTicket), 1) 
+    }
+    if(role!=="Ad"){   
+        usersMessage.push({name,IDTicket,role})
+        io.to(IDTicket).emit('usermessage',usersMessage);
+    }
 
-    }
-    try{
-    Message.find({room}).then(data=>io.to(room).emit('oldMessages', data))
-    }catch{
-      console.log('eror')
-    }
+    messageController.getMessagesTicket(io,IDTicket)
+  
    console.log("chatuser:")
    console.log(usersMessage)
   });
 
   socket.on('sendMessage', (objet, callback) => {
-    const obj ={room:objet.room, user:objet.name, text: objet.message ,date:new Date().toUTCString()}
-    const newMessage = new Message(obj);
-    newMessage.save().then(()=>{
-    io.to(objet.room).emit('message', obj);
+    const newMessage ={IDTicket:objet.IDTicket, user:objet.name, contenu: objet.message ,date:new Date(),type:objet.type}
+    messageController.createMessage(newMessage,io)
     callback()
-  }) 
+    console.log('ee')
+    if(objet.role==='In'&&objet.connecte===false){
+      const index= messageVu.findIndex((ob)=>ob.IDTicket==objet.IDTicket);
+      index===-1
+      ?messageVu.push({IDTicket:objet.IDTicket,nbr:1})
+      :messageVu[index]={IDTicket:objet.IDTicket,nbr:messageVu[index].nbr+1}
+      io.to(objet.IDTicket).emit('messageNonVu', messageVu); 
+    }
+    console.log(messageVu)
+  
   });
 
-  // socket.on('oldStatus', (objet) => { 
-  //   console.log( usersMessage.findIndex((user)=>user.room === objet.room && user.name === objet.name)!==-1)
-  //   usersMessage.findIndex((user)=>user.room === objet.room && user.name === objet.name)!==-1&&io.to(objet.room).emit('status','true');
-  // });
+  socket.on('messagesNomLu', (objet) => {
+    socket.join(objet.IDTicket);
+    io.to(objet.IDTicket).emit('messageNonVu', messageVu);
+  
+  });
+
+
 
   socket.on('disconnectChat', (objet) => {  
-    usersMessage.findIndex((user)=>user.room === objet.room && user.name === objet.name)!==-1&&usersMessage.splice(usersMessage.findIndex((user)=>user.room === objet.room && user.name === objet.name), 1)
-    //usersMessage.findIndex((user)=>user.room === objet.room && user.name === objet.name)===-1&&socket.broadcast.to(objet.room).emit('status','false');
-    io.to(objet.room).emit('usermessage',usersMessage);
+    usersMessage.findIndex((user)=>user.IDTicket === objet.IDTicket && user.name === objet.name)!==-1&&usersMessage.splice(usersMessage.findIndex((user)=>user.IDTicket === objet.IDTicket && user.name === objet.name), 1)
+    io.to(objet.IDTicket).emit('usermessage',usersMessage);
   });
 });
 

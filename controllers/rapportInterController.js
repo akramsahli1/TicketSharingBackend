@@ -18,12 +18,10 @@ const getAllRapportInters = async (req, res) => {
     console.log(findArgs)
     const rapportInters = await RapportInter.find(findArgs)
     .populate("IDTicket")
-    .then(function(rapp) {
     res.status(200).json({
       success: "True",
-      data : rapp
+      data : rapportInters
       });
-    }); 
   } catch(err){
         res.status(404).json({
           success: "false",
@@ -70,7 +68,7 @@ const createRapportInter = async (req, res) => {
   
   const getRapportInter = async (req, res) => {
     try{
-      const rapportInter = await RapportInter.findById(req.params.rapportInterId, req.body);
+      const rapportInter = await RapportInter.findById(req.params.rapportInterId, req.body).populate("IDTicket");
       res.status(200).json({
       success: "True",
       data : rapportInter
@@ -116,12 +114,10 @@ const createRapportInter = async (req, res) => {
     try{
       const rapportInters = await RapportInter.find({IDintervenant:req.params.IDintervenant})
       .populate("IDTicket")
-      .then(function(rapp) {
       res.status(200).json({
         success: "True",
-        data : rapp
+        data : rapportInters
         });
-      });
     } catch(err){
         res.status(404).json({
           success: "false",
@@ -132,7 +128,7 @@ const createRapportInter = async (req, res) => {
   
   const getRapportIntersTicket = async (req, res) => {
     try{
-      const rapportInters = await RapportInter.find({IDTicket:req.params.IDTicket});
+      const rapportInters = await RapportInter.find({IDTicket:req.params.IDTicket}).populate("IDTicket");
       res.status(200).json({
         success: "True",
         data: rapportInters

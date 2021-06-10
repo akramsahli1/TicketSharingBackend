@@ -8,25 +8,17 @@ const rapportInterSchema = mongoose.Schema({
         ref: "Ticket"
     },
     IDintervenant : {
-        type: String
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "MembSociete"
     },
     dateCreation : {
-        type: String
-    },
-    heureCreation : {
-        type: String
+        type: Date
     },
     dateDebut : {
-        type: String
-    },
-    heureDebut : {
-        type: String
+        type: Date
     },
     dateFin : {
-        type: String
-    },
-    heureFin : {
-        type: String
+        type: Date
     },
     detailinter : {
         type: String
@@ -40,7 +32,7 @@ const rapportInterSchema = mongoose.Schema({
 });
 
 
-
+ 
 
 
 const RapportInter = mongoose.model("RapportInter", rapportInterSchema);

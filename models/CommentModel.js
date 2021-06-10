@@ -2,8 +2,9 @@ const mongoose = require("mongoose");
 
 const commentSchema = mongoose.Schema({
     
-    room : {
-        type: String
+    IDTicket : {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Ticket"
     },
     user: {
         type: String
@@ -12,7 +13,7 @@ const commentSchema = mongoose.Schema({
         type: String
     },
     date : {
-        type: String
+        type: Date
     },
     
 });

@@ -3,7 +3,8 @@ const mongoose = require("mongoose");
 const contratSchema = mongoose.Schema({
     
     IDclient : {
-        type: String
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Client"
     },
     type : {
         type: String
@@ -35,3 +36,4 @@ module.exports = Contrat;
 
 
     
+ 

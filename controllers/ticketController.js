@@ -17,13 +17,20 @@ const getAllTickets = async (req, res) => {
           findArgs[key] = req.body.filters[key];}
         }  
   }
-    
+  let ref = req.body.searchRef;
     console.log(findArgs)
-    const tickets = await Ticket.find(findArgs);
-    res.status(200).json({
-    success: "True",
-    data : tickets
-    }); 
+    let tickets;
+    if (ref)
+       tickets = await Ticket.find(findArgs)
+      .find({ $text: { $search: ref } })
+      .populate('IDclient')
+    else
+       tickets = await Ticket.find(findArgs).populate('IDclient')
+      res.status(200).json({
+        success: "True",
+        data : tickets
+        }); 
+
   } catch(err){
         res.status(404).json({
           success: "false",
@@ -65,7 +72,7 @@ const createTicket = async (req, res) => {
   
   const getTicket = async (req, res) => {
     try{
-      const ticket = await Ticket.findById(req.params.ticketId, req.body);
+      const ticket = await Ticket.findById(req.params.ticketId, req.body).populate('IDclient');
       res.status(200).json({
         success: "True",
         data : ticket
@@ -104,8 +111,7 @@ const createTicket = async (req, res) => {
   };
   const getTicketsClient = async (req, res) => {
     try{
-      const tickets = await Ticket.find({IDclient:req.params.IDclient});
-      console.log(req.params.IDclient);
+      const tickets = await Ticket.find({IDclient:req.params.IDclient}).populate("Client");
       res.status(200).json({
         success: "True",
         data: tickets
@@ -120,7 +126,7 @@ const createTicket = async (req, res) => {
 
   const getTicketsContrat = async (req, res) => {
     try{
-      const tickets = await Ticket.find({contrat:req.params.contrat});
+      const tickets = await Ticket.find({contrat:req.params.contrat}).populate('IDclient');
       res.status(200).json({
         success: "True",
         data: tickets
