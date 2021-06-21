@@ -8,6 +8,10 @@ router
   .route("/")
   .post(Filtre,statistiqueController.stasticAllTicket)
 
+router
+  .route("/aa")
+  .post(statistiqueController.modifTicke)
+
   router
   .route("/add")
   .post(statistiqueController.createTicket)

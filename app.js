@@ -42,7 +42,7 @@ app.use("/api/v1/mailing",mailingRouter);
 app.use("/api/v1/contrat",contratRouter);
 app.use("/api/v1/rapportInter",rapportInterRouter);
 app.use("/api/v1/affectation",affecterRouter);
-app.use("/api/v1/statistisque",statistiqueRoutes);
+app.use("/api/v1/statistique",statistiqueRoutes);
 
 app.use("/", (req, res, next) => {
   console.log("Introuvable !");
@@ -68,7 +68,7 @@ io.on('connect', (socket) => {
     socket.join(IDTicket);
     if(role!=="Ad"){
       
-    const newComment = { IDTicket, user:'chatAdmin', text: `${name} à rejoindre ` ,date:new Date()};
+    const newComment = { IDTicket, user:'chatAdmin', text: `${name} a rejoint ` ,date:new Date()};
     usersComment.findIndex((user)=>user.IDTicket === IDTicket && user.name === name)===-1&&commentController.createComment(newComment)
     usersComment.push({name,IDTicket})
     }
@@ -87,11 +87,11 @@ io.on('connect', (socket) => {
       const newComment ={
                   IDTicket:objet.IDTicket,
                   user: 'chatAdmin' ,
-                  text: `${objet.name} à sortir `,
+                  text: `${objet.name} a quitté `,
                   date:new Date(),
                 }
-      usersComment.splice(usersComment.findIndex((user)=>user.IDTicket === obj.IDTicket && user.name === objet.name), 1)  
-     if(usersComment.findIndex((user)=>user.IDTicket === obj.IDTicket && user.name === objet.name)===-1 ){  
+      usersComment.splice(usersComment.findIndex((user)=>user.IDTicket === newComment.IDTicket && user.name === objet.name), 1)  
+     if(usersComment.findIndex((user)=>user.IDTicket === newComment.IDTicket && user.name === objet.name)===-1 ){  
       commentController.createComment(newComment,io)     
     }
   });

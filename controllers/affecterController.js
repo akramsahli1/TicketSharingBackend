@@ -28,6 +28,7 @@ const createAffectation = async (req, res) => {
       data : affectation
     });
   } catch(err) {
+    console.log(err)
     res.status(404).json({
       success: "false",
       msg:err
@@ -61,6 +62,7 @@ const getAffectationsTicket = async (req, res) => {
           msg:err
         })
     }
+
 };
 
 const getAllAffectationsTicket = async (req, res) => {
@@ -87,13 +89,11 @@ const getAffectationsIntervenant = async (req, res) => {
     try{
       const affectations = await Affecter.find({IDintervenant:req.params.IDintervenant,annule:false})
       .populate({ path:"IDTicket",model:'Ticket',populate:{path:'IDclient',model:'Client'}})
-      .then(function(aff) {
-        
       res.status(200).json({
         success: "True",
-        data : aff
+        data : affectations
         });
-      });
+
     } catch(err){
         res.status(404).json({
           success: "false",

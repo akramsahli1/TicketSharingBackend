@@ -2,20 +2,22 @@ const express = require("express");
 const ticketController = require("../controllers/ticketController");
 const router = express.Router();
 const Filtre=require('../middleware/FiltreTicket');
+const ticketMiddle=require('../middleware/Ticket');
+
 
 
 router
   .route("/")
-  .post(ticketController.createTicket)
+  .post(ticketMiddle.createRef,ticketController.createTicket)
 
 router  
   .route("/getAll")
-  .post(Filtre,ticketController.getAllTickets)  
+  .post(Filtre.filtreIntervenant,ticketController.getAllTickets)  
 
 router
   .route("/:ticketId")
   .get(ticketController.getTicket)
-  .delete(ticketController.deleteTicket)
+  .delete(ticketMiddle.deleteTicket,ticketController.deleteTicket)
   .patch(ticketController.updateTicket);
 
 router

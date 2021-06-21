@@ -20,7 +20,7 @@ const handleErrors = (err) => {
 
   // Duplicate error code
   if (err.code === 11000) {
-    errors.login = "that login is already registered";
+    errors.login = "ce login est déjà enregistré";
     return errors;
   }
 
@@ -83,7 +83,7 @@ module.exports.signup_postClient = async (req, res) => {
 
   } catch (err) {
     const errors = handleErrors(err);
-    res.status(400).json({ errors });
+    res.status(201).json({ errors });
   }
 };
 

@@ -176,7 +176,7 @@ function addHours (d,h) {
 
 const createTicket = async (req, res) => {
   const clients = ["606a3b2eb2983a14b0923f24", "606afc0fab630c45d817abbd", "606b4d5014d46b2d98170fc2", "606b4dc514d46b2d98170fc3", "609dcef42b4a813ba45eee9e","60accf9ae6b7b732788b6019"];
-  const priorites=['Normal','Urgent','Critique'];
+  const priorites=['Normale','Urgente','Critique'];
   const natures=['Maintenance','Neauvau besoin','Maintenance','Maintenance','Maintenance','Maintenance','Maintenance'];
   const objets=['email Blocke','serveur en Panne','Pas de résaux','email Blocke',"Problème d'instalation ",'email Blocke','Problème de base données'];
   var tab=[]
@@ -285,10 +285,66 @@ const createAff = async (req, res) => {
   } 
 };
 
+
+
+const modifTicke = async (req, res) => {
+  const demandeCloturee=await Ticket.find()
+  
+  try{
+  demandeCloturee.map((dde,index)=>{
+    var image=null
+    Ticket.findByIdAndUpdate(dde._id,{image}, { new: true,runValidators: true})
+      .then((inter)=>{
+        console.log(inter)
+      }); 
+   
+ })
+
+    res.status(200).json({
+      success: "cbon",
+      data :'tab'
+    });
+   
+  } catch(err) {
+    console.log(err);
+     res.status(404).json({
+     success: "false", });
+  } 
+};
+
+
+
+
+const suprimerTicket = async (req, res) => {
+
+  
+  try{
+  demandeCloturee.map((dde,index)=>{
+    var image=null
+    Ticket.findByIdAndUpdate(dde._id,{image}, { new: true,runValidators: true})
+      .then((inter)=>{
+        console.log(inter)
+      }); 
+   
+ })
+
+    res.status(200).json({
+      success: "cbon",
+      data :'tab'
+    });
+   
+  } catch(err) {
+    console.log(err);
+     res.status(404).json({
+     success: "false", });
+  } 
+};
+
   module.exports = {
     stasticAllTicket,
     createTicket,
     createAff,
     stasticTempsTickets,
-    stasticTicketPie
+    stasticTicketPie,
+    modifTicke
   };

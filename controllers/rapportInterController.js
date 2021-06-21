@@ -7,17 +7,38 @@ app.use(fileupload())
 const getAllRapportInters = async (req, res) => {
   try{
   let findArgs = {};
-  
-  for (let key in req.body.filters) {
 
-      if (req.body.filters[key].length > 0) {
-              findArgs[key] = req.body.filters[key];
+  for (let key in req.body.filters) {
+    
+    if(key==='IDclient'){
+      if(req.ticket!==undefined){findArgs['IDTicket'] = req.ticket;}
+   }
+   else {
+    if (req.body.filters[key].length > 0){ 
+      if(key==='dateCreation') {
+          const date= new Date(req.body.filters[key])
+           findArgs[key] =  {$gte:date, $lt: new Date(date.getFullYear(),date.getMonth(),(date.getDate() +1))};
+        }else if(key==='attachement'){
+          if(req.body.filters[key].length ===1){
+            if(req.body.filters[key][0]==="Sans"){
+              findArgs['nomAttachement'] = null;
+             }else{
+              findArgs['nomAttachement'] = { $ne: null };
+             }
+            }
+          
+        }else{
+          findArgs[key] = req.body.filters[key];
+        }
       }
+    }
   }
     
     console.log(findArgs)
     const rapportInters = await RapportInter.find(findArgs)
-    .populate("IDTicket")
+    .populate("IDintervenant")
+    .populate({ path:"IDTicket",model:'Ticket',populate:{path:'IDclient',model:'Client'}})
+
     res.status(200).json({
       success: "True",
       data : rapportInters

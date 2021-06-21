@@ -14,7 +14,13 @@ const getAllTickets = async (req, res) => {
        }
        else {
         if (req.body.filters[key].length > 0){ 
-          findArgs[key] = req.body.filters[key];}
+          if(key==='dateCreation') {
+              const date= new Date(req.body.filters[key])
+               findArgs[key] =  {$gte:date, $lt: new Date(date.getFullYear(),date.getMonth(),(date.getDate() +1))};
+            }else{
+              findArgs[key] = req.body.filters[key];
+            }
+          }
         }  
   }
   let ref = req.body.searchRef;
@@ -23,9 +29,9 @@ const getAllTickets = async (req, res) => {
     if (ref)
        tickets = await Ticket.find(findArgs)
       .find({ $text: { $search: ref } })
-      .populate('IDclient')
+      .populate('IDclient').sort([['dateCreation','desc']])
     else
-       tickets = await Ticket.find(findArgs).populate('IDclient')
+       tickets = await Ticket.find(findArgs).populate('IDclient').sort([['dateCreation','desc']])
       res.status(200).json({
         success: "True",
         data : tickets
@@ -52,7 +58,7 @@ const getImage = async(req, res) => {
 }
 
 const createTicket = async (req, res) => {
-  const newTicket = new Ticket(req.body);
+  const newTicket = new Ticket({...req.body,ref:req.ref});
   try{
     if(req.files !== null){
       newTicket.image = new Buffer.from(req.files.image.data, 'base64');

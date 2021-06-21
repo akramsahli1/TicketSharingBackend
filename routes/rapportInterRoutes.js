@@ -1,6 +1,7 @@
 const express = require("express");
 const rapportInterController = require("../controllers/rapportInterController");
 const router = express.Router();
+const Filtre=require('../middleware/FiltreTicket');
 
 
 router
@@ -9,7 +10,7 @@ router
 
 router  
   .route("/getAll")
-  .post(rapportInterController.getAllRapportInters)  
+  .post(Filtre.filtreClient,rapportInterController.getAllRapportInters)  
 
 router
   .route("/:rapportInterId")

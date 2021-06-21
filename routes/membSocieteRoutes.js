@@ -2,6 +2,8 @@ const express = require("express");
 const router = express.Router();
 const membSocieteController = require("../controllers/membSocieteController");
 const auth=require('../middleware/Auth');
+const ticketMiddleware=require('../middleware/Ticket');
+
 router
   .route("/")
   .get(membSocieteController.getAllMembSocietes)
@@ -13,7 +15,7 @@ router
 router
   .route("/:membSocieteId")
   .get(membSocieteController.getMembSociete)
-  .delete(membSocieteController.deleteMembSociete)
+  .delete(ticketMiddleware.deleteTicketIn,membSocieteController.deleteMembSociete)
   .patch(membSocieteController.updateMembSociete);
 
 router
