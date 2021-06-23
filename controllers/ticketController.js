@@ -44,11 +44,14 @@ const getAllTickets = async (req, res) => {
       })
   }
 };
+
 const getImage = async(req, res) => {
   try{
   const ticket = await Ticket.findById(req.params.ticketId, req.body);
-   res.set('Content-Type','image/jpg')
-   res.send(ticket.image)
+  res.status(200).json({
+    success: "true",
+    data : ticket.image.toString('base64')
+ });
  } catch(err) {
    res.status(404).json({
      success: "false",
