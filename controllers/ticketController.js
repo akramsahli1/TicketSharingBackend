@@ -117,12 +117,18 @@ const createTicket = async (req, res) => {
   };
   const getTicketsClient = async (req, res) => {
     try{
-      const tickets = await Ticket.find({IDclient:req.params.IDclient}).populate("Client");
+      let findArgs = {IDclient:req.params.IDclient};
+        if (req.body.dateCreation.length > 0){ 
+              const date= new Date(req.body.dateCreation)
+               findArgs['dateCreation'] =  {$gte:date, $lt: new Date(date.getFullYear(),date.getMonth(),(date.getDate() +1))};     
+          }
+      const tickets = await Ticket.find(findArgs).populate("Client");
       res.status(200).json({
         success: "True",
         data: tickets
       }); 
     } catch(err){
+      console.log(err)
         res.status(404).json({
           success: "false",
           msg:err

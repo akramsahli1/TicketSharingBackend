@@ -54,7 +54,7 @@ module.exports.signup_postMembS = async (req, res) => {
 
   } catch (err) {
     const errors = handleErrors(err);
-    res.status(400).json({ errors });
+    res.status(201).json({ errors });
   }
 };
 

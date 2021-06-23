@@ -25,7 +25,7 @@ router
   .get(ticketController.getImage)
 router
   .route("/getInterventionsClient/:IDclient")
-  .get(ticketController.getTicketsClient)
+  .post(ticketController.getTicketsClient)
 
 
   router

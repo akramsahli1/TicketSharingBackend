@@ -14,6 +14,7 @@ const mailingRouter = require("./routes/mailingRoutes");
 const contratRouter = require("./routes/contratRoutes");
 const rapportInterRouter = require("./routes/rapportInterRoutes");
 const affecterRouter = require("./routes/affecterRoutes");
+const feedBackRouter = require("./routes/feedBackRoutes");
 const statistiqueRoutes = require("./routes/statistiqueRoutes");
 const socketio = require('socket.io');
 const http = require('http');
@@ -42,6 +43,7 @@ app.use("/api/v1/mailing",mailingRouter);
 app.use("/api/v1/contrat",contratRouter);
 app.use("/api/v1/rapportInter",rapportInterRouter);
 app.use("/api/v1/affectation",affecterRouter);
+app.use("/api/v1/feedBack",feedBackRouter);
 app.use("/api/v1/statistique",statistiqueRoutes);
 
 app.use("/", (req, res, next) => {

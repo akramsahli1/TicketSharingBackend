@@ -1,6 +1,8 @@
 const Ticket = require("../models/ticketModel");
 const Rapport = require("../models/rapportInterModel");
 const Affecter = require("../models/affecterModel");
+const Contrat = require("../models/contratModel");
+
 
 createRef= async(req, res, next) => {
     const year=new Date(req.body.dateCreation).getFullYear()
@@ -32,6 +34,8 @@ deleteTicketCl= async(req, res, next) => {
   const res1=await Affecter.remove({IDTicket:idsTickes})
   const res2= await Rapport.remove({IDTicket:idsTickes})
   const res3=await Ticket.remove({_id:idsTickes})
+  const res4=await Contrat.remove({IDclient:req.params.clientId})
+
   next()
  
  };
