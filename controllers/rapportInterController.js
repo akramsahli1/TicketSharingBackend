@@ -38,7 +38,7 @@ const getAllRapportInters = async (req, res) => {
     const rapportInters = await RapportInter.find(findArgs)
     .populate("IDintervenant")
     .populate({ path:"IDTicket",model:'Ticket',populate:{path:'IDclient',model:'Client'}})
-
+    .sort([['dateCreation','desc']])
     res.status(200).json({
       success: "True",
       data : rapportInters
@@ -134,7 +134,8 @@ const createRapportInter = async (req, res) => {
   const getRapportIntersIntervenant = async (req, res) => {
     try{
       const rapportInters = await RapportInter.find({IDintervenant:req.params.IDintervenant})
-      .populate("IDTicket")
+      .populate({ path:"IDTicket",model:'Ticket',populate:{path:'IDclient',model:'Client'}})
+      .sort([['dateCreation','desc']])
       res.status(200).json({
         success: "True",
         data : rapportInters

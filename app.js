@@ -120,7 +120,6 @@ io.on('connect', (socket) => {
     const newMessage ={IDTicket:objet.IDTicket, user:objet.name, contenu: objet.message ,date:new Date(),type:objet.type}
     messageController.createMessage(newMessage,io)
     callback()
-    console.log('ee')
     if(objet.role==='In'&&objet.connecte===false){
       const index= messageVu.findIndex((ob)=>ob.IDTicket==objet.IDTicket);
       index===-1
